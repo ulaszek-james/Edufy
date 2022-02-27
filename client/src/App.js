@@ -14,7 +14,7 @@ function App() {
   }
 
   const addUser = () => {
-    Axios.post('http://localhost:3001/create', {
+    Axios.post('https://edufy-by-edufiers.herokuapp.com/create', {
       fName: fName, 
       lName: lName, 
       username: username, 
