@@ -12,11 +12,6 @@ app.use(express.static(publicPath)); // previous line result passed into here so
 app.use(cors());
 app.use(express.json());
 
-// // make sure index.html file is served, in case the user requests a resource currently not in the public folder
-// app.get('*', (req, res) => {
-//     res.sendFile(path.join(publicPath, 'index.html'));
-//  });
-
 app.get('/', (req, res, next) => {
 
     res.status(200).json({
@@ -55,10 +50,6 @@ app.post('/create', (req, res) => {
         }
     );
 })
-
-// app.listen(3001, ()=> {
-//     console.log("Server is running on port 3001")
-// })
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}!`);
