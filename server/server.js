@@ -6,9 +6,6 @@ const port = process.env.PORT || 3000; // start the server by telling it which p
 const mysql = require('mysql')
 const cors = require('cors')
 
-const publicPath = path.join(__dirname, '..', 'client/public'); // pass in all pieces of the path and path.join puts them together
-app.use(express.static(publicPath)); // previous line result passed into here so Express knows which files to serve
-
 app.use(cors());
 app.use(express.json());
 
