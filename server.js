@@ -51,6 +51,23 @@ app.post('/create', (req, res) => {
     );
 })
 
-app.listen(port, () => {
-    console.log(`Server is up on port ${port}!`);
- });
+// This is maybe needed for tests
+
+// app.get('/get', (req, res) => {
+//     console.log(req.body)
+//     const username = req.body.username;
+
+//     db.query(
+//         "SELECT username FROM login_example (username) VALUES (?)",
+//         [username],
+//         (err, result) => {
+//             if (err) {
+//                 res.send("Valid username");
+//             } else {
+//                 console.log(err);
+//             }
+//         }
+//     );
+// })
+
+export default app
