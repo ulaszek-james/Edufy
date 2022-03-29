@@ -28,6 +28,24 @@ const db = mysql.createConnection({
     database: "heroku_1bc510ffc4c3a1d",
 });
 
+// Get all quiz questions
+app.get('/questions', (req, res) => {
+    const sqlSelect = "SELECT * FROM quiz_example";
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+});
+
+// Get one quiz question
+app.get('/questions/:id', (req, res) => {
+    const id = req.params.id;
+    const sqlSelect = "SELECT * FROM quiz_example WHERE questionNumber = " + id;
+
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+})
+
 app.post('/create', (req, res) => {
     console.log(req.body)
     const fName = req.body.fName;
