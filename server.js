@@ -6,9 +6,6 @@ const port = process.env.PORT || 3000; // start the server by telling it which p
 const mysql = require('mysql')
 const cors = require('cors')
 
-const publicPath = path.join(__dirname, '..', 'client/public'); // pass in all pieces of the path and path.join puts them together
-app.use(express.static(publicPath)); // previous line result passed into here so Express knows which files to serve
-
 app.use(cors());
 app.use(express.json());
 
@@ -30,6 +27,24 @@ const db = mysql.createConnection({
     password: "78c0a726",
     database: "heroku_1bc510ffc4c3a1d",
 });
+
+// Get all quiz questions
+app.get('/questions', (req, res) => {
+    const sqlSelect = "SELECT * FROM quiz_example";
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+});
+
+// Get one quiz question
+app.get('/questions/:id', (req, res) => {
+    const id = req.params.id;
+    const sqlSelect = "SELECT * FROM quiz_example WHERE questionNumber = " + id;
+
+    db.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+})
 
 app.post('/create', (req, res) => {
     console.log(req.body)
