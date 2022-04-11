@@ -12,7 +12,7 @@ const app = express(); // create new instance of express
 const port = process.env.PORT || 4000; // start the server by telling it which port to use, using port 4000 on local environment; however, Heroku will assign port for app after deployment
 
 app.use(cors({
-    origin: ["http://localhost:3000", "https://wizardly-swartz-83a6f0.netlify.app/"],
+    origin: ["http://localhost:3000", "https://wizardly-swartz-83a6f0.netlify.app"],
     methods: ["GET", "POST"],
     credentials: true
 }));
