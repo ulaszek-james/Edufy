@@ -23,14 +23,14 @@ const oneDay = 1000 * 60 * 60 * 24;
 app.set("trust proxy", 1);
 app.use(session({
     key: 'userID',
-	secret: 'secret', // random unique string key used to authenticate a session, stored in environment variable and can't be exposed to public (usually long and randomly generated in a production environment)
+    secret: 'secret', // random unique string key used to authenticate a session, stored in environment variable and can't be exposed to public (usually long and randomly generated in a production environment)
     resave: false, // enables session to be stored back to session store, even if session was never modified during request
-	saveUninitialized: false, // allows any uninitialized session to be sent to the store (when a session is created but not modified, is referred to as uninitialized)
+    saveUninitialized: false, // allows any uninitialized session to be sent to the store (when a session is created but not modified, is referred to as uninitialized)
     proxy: true,
-    cookie: { 
+    cookie: {
         sameSite: 'none', // must be 'none' to enable cross-site delivery
         secure: true, // must be true if sameSite='none'
-        expires: oneDay 
+        expires: oneDay
     }
 }));
 
@@ -55,12 +55,37 @@ app.get('/', (req, res, next) => {
     });
 });
 
-const db = mysql.createConnection({
+var db_config = {
     user: "b0df76319fd66a",
     host: "us-cdbr-east-05.cleardb.net",
     password: "78c0a726",
     database: "heroku_1bc510ffc4c3a1d",
-});
+};
+
+var connection;
+
+function handleDisconnect() {
+    connection = mysql.createConnection(db_config); // Recreate the connection, since
+    // the old one cannot be reused.
+
+    connection.connect(function (err) {              // The server is either down
+        if (err) {                                     // or restarting (takes a while sometimes).
+            console.log('error when connecting to db:', err);
+            setTimeout(handleDisconnect, 2000); // We introduce a delay before attempting to reconnect,
+        }                                     // to avoid a hot loop, and to allow our node script to
+    });                                     // process asynchronous requests in the meantime.
+    // If you're also serving http, display a 503 error.
+    connection.on('error', function (err) {
+        console.log('db error', err);
+        if (err.code === 'PROTOCOL_CONNECTION_LOST') { // Connection to the MySQL server is usually
+            handleDisconnect();                         // lost due to either server restart, or a
+        } else {                                      // connnection idle timeout (the wait_timeout
+            throw err;                                  // server variable configures this)
+        }
+    });
+}
+
+handleDisconnect();
 
 // Get all quiz questions
 app.get('/questions', (req, res) => {
@@ -81,11 +106,11 @@ app.get('/questions/:id', (req, res) => {
 })
 
 // Check if user is logged in
-app.get('/auth', (req, res)=> {
+app.get('/auth', (req, res) => {
     if (req.session.user) {
-        res.send({loggedIn: true, user: req.session.user});
+        res.send({ loggedIn: true, user: req.session.user });
     } else {
-        res.send({loggedIn: false});
+        res.send({ loggedIn: false });
     }
 })
 
@@ -98,8 +123,8 @@ app.post('/create', (req, res) => {
     const password = req.body.password;
 
     db.query(
-        "INSERT INTO login_example (fName, lName, username, password) VALUES (?,?,?,?)", 
-        [fName,lName,username,password], 
+        "INSERT INTO login_example (fName, lName, username, password) VALUES (?,?,?,?)",
+        [fName, lName, username, password],
         (err, result) => {
             if (err) {
                 console.log(err);
@@ -112,33 +137,33 @@ app.post('/create', (req, res) => {
 
 // Log in to an existing account
 app.post('/auth', (req, res) => { // POST method captures input fields when user submits form
-	// Capture the input fields
-	let username = req.body.username;
-	let password = req.body.password;
-	// Ensure the input fields exists and are not empty
-	if (username && password) {
-		// Execute SQL query that'll select the account from the database based on the specified username and password
-		db.query('SELECT * FROM login_example WHERE username = ? AND password = ?', [username, password], 
-        (err, result) => {
-			// If there is an issue with the query, output the error
-			if (err) {
-                res.send({err: err})
-            };
-			// If the account exists
-			if (result.length > 0) {
-				// Authenticate the user
-                req.session.user = result;
-                console.log(req.session.user);
-                res.send(result);
-			} else {
-				res.send({ message: 'Incorrect Username and/or Password!' });
-			}			
-			res.end();
-		});
-	} else {
-		res.send({ message: 'Please enter Username and Password!' });
-		res.end();
-	}
+    // Capture the input fields
+    let username = req.body.username;
+    let password = req.body.password;
+    // Ensure the input fields exists and are not empty
+    if (username && password) {
+        // Execute SQL query that'll select the account from the database based on the specified username and password
+        db.query('SELECT * FROM login_example WHERE username = ? AND password = ?', [username, password],
+            (err, result) => {
+                // If there is an issue with the query, output the error
+                if (err) {
+                    res.send({ err: err })
+                };
+                // If the account exists
+                if (result.length > 0) {
+                    // Authenticate the user
+                    req.session.user = result;
+                    console.log(req.session.user);
+                    res.send(result);
+                } else {
+                    res.send({ message: 'Incorrect Username and/or Password!' });
+                }
+                res.end();
+            });
+    } else {
+        res.send({ message: 'Please enter Username and Password!' });
+        res.end();
+    }
 });
 
 // Log out of an account
@@ -158,4 +183,4 @@ app.post('/logout', (req, res) => {
 
 app.listen(port, () => {
     console.log(`Server is up on port ${port}!`);
- });
+});
