@@ -28,7 +28,7 @@ app.use(session({
 	saveUninitialized: false, // allows any uninitialized session to be sent to the store (when a session is created but not modified, is referred to as uninitialized)
     proxy: true,
     cookie: { 
-        sameSite: none, // must be 'none' to enable cross-site delivery
+        sameSite: 'none', // must be 'none' to enable cross-site delivery
         secure: true, // must be true if sameSite='none'
         expires: oneDay 
     }
