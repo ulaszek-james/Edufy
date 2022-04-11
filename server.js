@@ -20,7 +20,7 @@ app.use(cors({
 // Associate the modules we'll be using with Express
 // creating 24 hours from milliseconds
 const oneDay = 1000 * 60 * 60 * 24;
-app.set('trust proxy', 1)
+app.enable('trust proxy');
 app.use(session({
     key: 'userID',
 	secret: 'secret', // random unique string key used to authenticate a session, stored in environment variable and can't be exposed to public (usually long and randomly generated in a production environment)
@@ -28,6 +28,7 @@ app.use(session({
 	saveUninitialized: false, // allows any uninitialized session to be sent to the store (when a session is created but not modified, is referred to as uninitialized)
     proxy: true,
     cookie: { 
+        secure: true,
         expires: oneDay 
     }
 }));
