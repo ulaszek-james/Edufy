@@ -55,6 +55,8 @@ app.get('/', (req, res, next) => {
     });
 });
 
+// Database configuration and disconnect handling code taken from CloudyMarble at Stack Overflow
+// https://stackoverflow.com/questions/20210522/nodejs-mysql-error-connection-lost-the-server-closed-the-connection
 var db_config = {
     user: "b0df76319fd66a",
     host: "us-cdbr-east-05.cleardb.net",
