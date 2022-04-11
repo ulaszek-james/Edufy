@@ -90,7 +90,7 @@ handleDisconnect();
 // Get all quiz questions
 app.get('/questions', (req, res) => {
     const sqlSelect = "SELECT * FROM quiz_example";
-    db.query(sqlSelect, (err, result) => {
+    connection.query(sqlSelect, (err, result) => {
         res.send(result);
     });
 });
@@ -100,7 +100,7 @@ app.get('/questions/:id', (req, res) => {
     const id = req.params.id;
     const sqlSelect = "SELECT * FROM quiz_example WHERE questionNumber = " + id;
 
-    db.query(sqlSelect, (err, result) => {
+    connection.query(sqlSelect, (err, result) => {
         res.send(result);
     });
 })
@@ -122,7 +122,7 @@ app.post('/create', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
 
-    db.query(
+    connection.query(
         "INSERT INTO login_example (fName, lName, username, password) VALUES (?,?,?,?)",
         [fName, lName, username, password],
         (err, result) => {
@@ -143,7 +143,7 @@ app.post('/auth', (req, res) => { // POST method captures input fields when user
     // Ensure the input fields exists and are not empty
     if (username && password) {
         // Execute SQL query that'll select the account from the database based on the specified username and password
-        db.query('SELECT * FROM login_example WHERE username = ? AND password = ?', [username, password],
+        connection.query('SELECT * FROM login_example WHERE username = ? AND password = ?', [username, password],
             (err, result) => {
                 // If there is an issue with the query, output the error
                 if (err) {
