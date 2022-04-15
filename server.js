@@ -143,6 +143,23 @@ app.get('/grammar/:id', (req, res) => {
     });
 })
 
+// Get all quiz questions from algebra quiz
+app.get('/algebra', (req, res) => {
+    const sqlSelect = "SELECT * FROM algebra";
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+});
+
+// Get one quiz question from algebra quiz
+app.get('/algebra/:id', (req, res) => {
+    const id = req.params.id;
+    const sqlSelect = "SELECT * FROM algebra WHERE questionNumber = " + id;
+
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+})
 
 // Check if user is logged in
 app.get('/auth', (req, res) => {
