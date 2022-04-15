@@ -125,6 +125,25 @@ app.get('/solarsystem/:id', (req, res) => {
     });
 })
 
+// Get all quiz questions from grammar quiz
+app.get('/grammar', (req, res) => {
+    const sqlSelect = "SELECT * FROM grammar";
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+});
+
+// Get one quiz question from grammar quiz
+app.get('/grammar/:id', (req, res) => {
+    const id = req.params.id;
+    const sqlSelect = "SELECT * FROM grammar WHERE questionNumber = " + id;
+
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+})
+
+
 // Check if user is logged in
 app.get('/auth', (req, res) => {
     if (req.session.user) {
