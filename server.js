@@ -107,6 +107,24 @@ app.get('/questions/:id', (req, res) => {
     });
 })
 
+// Get all quiz questions from solar system quiz
+app.get('/solarsystem', (req, res) => {
+    const sqlSelect = "SELECT * FROM solar_system";
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+});
+
+// Get one quiz question from solar system quiz
+app.get('/solarsystem/:id', (req, res) => {
+    const id = req.params.id;
+    const sqlSelect = "SELECT * FROM solar_system WHERE questionNumber = " + id;
+
+    connection.query(sqlSelect, (err, result) => {
+        res.send(result);
+    });
+})
+
 // Check if user is logged in
 app.get('/auth', (req, res) => {
     if (req.session.user) {
