@@ -145,7 +145,7 @@ app.get('/grammar/:id', (req, res) => {
 
 // Get all quiz questions from algebra quiz
 app.get('/algebra', (req, res) => {
-    const sqlSelect = "SELECT * FROM algebra";
+    const sqlSelect = "SELECT * FROM algebra_answers";
     connection.query(sqlSelect, (err, result) => {
         res.send(result);
     });
@@ -154,7 +154,7 @@ app.get('/algebra', (req, res) => {
 // Get one quiz question from algebra quiz
 app.get('/algebra/:id', (req, res) => {
     const id = req.params.id;
-    const sqlSelect = "SELECT * FROM algebra WHERE questionNumber = " + id;
+    const sqlSelect = "SELECT * FROM algebra_answers WHERE questionNumber = " + id;
 
     connection.query(sqlSelect, (err, result) => {
         res.send(result);
